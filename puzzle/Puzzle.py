@@ -4,13 +4,13 @@ from rules.IRules import IRules
 from domains.IDomain import IDomain
 
 class Puzzle(object):
-    def __init__(self, grid: List[List[int]], rules: List[IRules], domain_strategy: IDomain):
+    def __init__(self, grid: List[List[int]], rules: List[IRules], domain: IDomain):
         self.grid = grid
         self.h = len(grid)
         self.w = len(grid[0])
         self.variables = [[i * self.h + j for j in range(self.w)] for i in range(self.h)]
         self.rules = rules
-        self.domain_strategy = domain_strategy
+        self.domain = domain
         self.__setup_done = False
 
     def setup_problem(self, problem: Problem):
@@ -27,7 +27,7 @@ class Puzzle(object):
                 if val != 0:
                     problem.addVariable(variable, domain=[val])
                 else:
-                    problem.addVariable(variable, domain=self.domain_strategy.get_domain(i, j))
+                    problem.addVariable(variable, domain=self.domain.get_domain(i, j))
 
     def __add_constraints(self, problem: Problem):
         for rule in self.rules:
