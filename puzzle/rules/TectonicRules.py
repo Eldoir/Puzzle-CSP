@@ -21,9 +21,8 @@ class TectonicRules(IRules):
 
     def add_constraints(self, problem: Problem, h: int, w: int, variables: List[List[int]]):
         for cells in self.groups:
-            if len(cells) > 0:
-                related_variables = [variables[x][y] for x,y in cells]
-                problem.addConstraint(AllDifferentConstraint(), related_variables)
+            related_variables = [variables[x][y] for x,y in cells]
+            problem.addConstraint(AllDifferentConstraint(), related_variables)
 
         for i in range(h):
             for j in range(w):

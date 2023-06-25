@@ -19,7 +19,6 @@ grid = [
 ]
 
 killer_groups = [
-    (0, []), # first group is empty because we want to count groups naturally (starting from 1)
     (28, [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 4)]),
     (25, [(0, 5), (1, 5), (2, 5), (2, 6)]),
     (10, [(0, 6), (1, 6)]),

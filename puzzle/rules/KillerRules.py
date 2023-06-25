@@ -21,8 +21,7 @@ class KillerRules(IRules):
 
     def add_constraints(self, problem: Problem, h: int, w: int, variables: List[List[int]]):
         for sum, cells in self.groups:
-            if len(cells) > 0:
-                related_variables = [variables[x][y] for x,y in cells]
-                problem.addConstraint(AllDifferentConstraint(), related_variables)
-                if sum != 0:
-                    problem.addConstraint(ExactSumConstraint(sum), related_variables)
+            related_variables = [variables[x][y] for x,y in cells]
+            problem.addConstraint(AllDifferentConstraint(), related_variables)
+            if sum != 0:
+                problem.addConstraint(ExactSumConstraint(sum), related_variables)
