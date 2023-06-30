@@ -1,6 +1,7 @@
 from typing import List
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QPushButton, QMessageBox
 from Cell import Cell
+from collections.abc import Iterable
 
 class SudokuGrid(QWidget):
     def __init__(self):
@@ -9,12 +10,13 @@ class SudokuGrid(QWidget):
         self.selected_cells: set[Cell] = set()
         self.is_ctrl_pressed = False
         self.cells: List[List[Cell]] = []
-        
+
         self.initUI()
     
     def initUI(self):
         layout = QVBoxLayout()
         grid_layout = QGridLayout()
+        grid_layout.setSpacing(0)
         
         for row in range(9):
             row_cells = []
@@ -69,12 +71,12 @@ class SudokuGrid(QWidget):
     def set_cell_as_current_selection(self, cell: Cell):
         self.update_selected_cells([cell], self.selected_cells.copy())
 
-    def update_selected_cells(self, added_cells, removed_cells):
+    def update_selected_cells(self, added_cells: Iterable[Cell], removed_cells: Iterable[Cell]):
         for cell in removed_cells:
-            cell.setStyleSheet(Cell.defaultStyle)
+            cell.set_selected(False)
             self.selected_cells.remove(cell)
         for cell in added_cells:
-            cell.setStyleSheet(Cell.selectedStyle)
+            cell.set_selected(True)
             self.selected_cells.add(cell)
 
     def solve_button_clicked(self):
