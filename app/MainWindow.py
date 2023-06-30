@@ -1,11 +1,12 @@
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget
 
-class MyWindow(QMainWindow):
-    def __init__(self):
+class MainWindow(QMainWindow):
+    def __init__(self, title):
         super().__init__()
 
-        self.setWindowTitle("Puzzle-CSP")
+        self.setWindowTitle(title)
+        self.center_on_screen()    
 
-        # Center window on screen
+    def center_on_screen(self):
         screen_rect = QDesktopWidget().availableGeometry()
         self.move((screen_rect.width() - self.width()) / 2, (screen_rect.height() - self.height()) / 2)

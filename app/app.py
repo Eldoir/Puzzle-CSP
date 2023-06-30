@@ -1,11 +1,11 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from MyWindow import MyWindow
+from MainWindow import MainWindow
 from SudokuGrid import SudokuGrid
     
 def main():
     app = QApplication(sys.argv)
-    window = MyWindow()
+    window = MainWindow("Puzzle-CSP")
     grid = SudokuGrid()
     window.setCentralWidget(grid)
     window.show()
