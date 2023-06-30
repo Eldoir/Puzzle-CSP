@@ -16,6 +16,21 @@ class MyWindow(QMainWindow):
         screen_rect = QDesktopWidget().availableGeometry()
         self.move((screen_rect.width() - self.width()) // 2, (screen_rect.height() - self.height()) // 2)
 
+class Cell(QLabel):
+    font: QFont = None
+    defaultStyle: str = "background-color: white; border: 1px solid black;"
+    selectedStyle: str = "background-color: blue; border: 1px solid black;"
+
+    def __init__(self):
+        super().__init__()
+        if self.font is None:
+            self.font = QFont()
+            self.font.setPointSize(20)
+        self.setFont(self.font)
+        self.setFixedSize(40, 40)
+        self.setAlignment(Qt.AlignCenter)
+        self.setStyleSheet(self.defaultStyle)
+
 class SudokuGrid(QWidget):
     def __init__(self):
         super().__init__()
@@ -28,19 +43,12 @@ class SudokuGrid(QWidget):
     
     def initUI(self):
         layout = QVBoxLayout()
-        
         grid_layout = QGridLayout()
-        font = QFont()
-        font.setPointSize(20)
         
         for row in range(9):
             row_cells = []
             for col in range(9):
-                cell = QLabel()
-                cell.setFont(font)
-                cell.setFixedSize(40, 40)
-                cell.setAlignment(Qt.AlignCenter)
-                cell.setStyleSheet("background-color: white; border: 1px solid black;")
+                cell = Cell()
                 cell.mousePressEvent = lambda event, row=row, col=col: self.cell_clicked(event, row, col)
                 row_cells.append(cell)
                 grid_layout.addWidget(cell, row, col)
@@ -49,7 +57,7 @@ class SudokuGrid(QWidget):
         layout.addLayout(grid_layout)
         
         solve_button = QPushButton("Solve")
-        solve_button.clicked.connect(self.solve)
+        solve_button.clicked.connect(self.solve_button_clicked)
         layout.addWidget(solve_button)
         
         self.setLayout(layout)
@@ -82,13 +90,13 @@ class SudokuGrid(QWidget):
 
     def update_selected_cells(self, added_cells, removed_cells):
         for cell in removed_cells:
-            cell.setStyleSheet("background-color: white; border: 1px solid black;")
+            cell.setStyleSheet(Cell.defaultStyle)
             self.selected_cells.remove(cell)
         for cell in added_cells:
-            cell.setStyleSheet("background-color: blue; border: 1px solid black;")
+            cell.setStyleSheet(Cell.selectedStyle)
             self.selected_cells.add(cell)
 
-    def solve(self):
+    def solve_button_clicked(self):
         popup = QMessageBox(QMessageBox.Information, 'Popup', 'Solving...', QMessageBox.Ok)
         popup.exec_()
     
