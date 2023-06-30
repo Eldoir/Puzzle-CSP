@@ -5,7 +5,7 @@ from SudokuGrid import SudokuGrid
     
 def main():
     app = QApplication(sys.argv)
-    window = MainWindow("Puzzle-CSP")
+    window = MainWindow(title="Puzzle-CSP")
     grid = SudokuGrid()
     window.setCentralWidget(grid)
     window.show()

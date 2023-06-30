@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget
 
 class MainWindow(QMainWindow):
-    def __init__(self, title):
+    def __init__(self, title: str):
         super().__init__()
 
         self.setWindowTitle(title)
