@@ -14,12 +14,13 @@ class MyWindow(QMainWindow):
 
         # Center window on screen
         screen_rect = QDesktopWidget().availableGeometry()
-        self.move((screen_rect.width() - self.width()) // 2, (screen_rect.height() - self.height()) // 2)
+        self.move((screen_rect.width() - self.width()) / 2, (screen_rect.height() - self.height()) / 2)
 
 class Cell(QLabel):
     font: QFont = None
     defaultStyle: str = "background-color: white; border: 1px solid black;"
     selectedStyle: str = "background-color: blue; border: 1px solid black;"
+    value: int = 0
 
     def __init__(self):
         super().__init__()
@@ -31,11 +32,19 @@ class Cell(QLabel):
         self.setAlignment(Qt.AlignCenter)
         self.setStyleSheet(self.defaultStyle)
 
+    def set_value(self, value):
+        self.value = value
+        self.setText(str(value))
+
+    def delete_value(self):
+        self.value = 0
+        self.setText("")
+
 class SudokuGrid(QWidget):
     def __init__(self):
         super().__init__()
         
-        self.selected_cells = set()
+        self.selected_cells: set[Cell] = set()
         self.is_ctrl_pressed = False
         
         self.cells = []
@@ -62,19 +71,19 @@ class SudokuGrid(QWidget):
         
         self.setLayout(layout)
     
-    def cell_clicked(self, event, row, col):
+    def cell_clicked(self, event, row: int, col: int):
         cell = self.cells[row][col]
         if self.is_ctrl_pressed: # add cell to current selection
-            self.update_selected_cells(self.selected_cells.copy() | {cell}, removed_cells=[])
+            self.add_to_selected_cells(cell)
         else: # set cell as current selection
-            self.update_selected_cells([cell], self.selected_cells.copy())
+            self.set_cell_as_current_selection(cell)
     
     def keyPressEvent(self, event):
         key = event.key()
         if key >= 49 and key <= 57: #numpad 1-9
-            self.set_selected_cells_text(str(key - 48))
-        elif key == 16777219: # backspace
-            self.set_selected_cells_text("")
+            self.set_selected_cells_value(key - 48)
+        elif key == 16777219 or key == 16777223: # backspace or delete
+            self.delete_selected_cells_value()
         elif key == 16777249: # ctrl (left/right)
             self.is_ctrl_pressed = True
         print(f"Key pressed: {key}")
@@ -84,9 +93,19 @@ class SudokuGrid(QWidget):
         if key == 16777249: # ctrl (left/right)
             self.is_ctrl_pressed = False
 
-    def set_selected_cells_text(self, text: str):
+    def set_selected_cells_value(self, value: int):
         for cell in self.selected_cells:
-            cell.setText(text)
+            cell.set_value(value)
+
+    def delete_selected_cells_value(self):
+        for cell in self.selected_cells:
+            cell.delete_value()
+
+    def add_to_selected_cells(self, cell: Cell):
+        self.update_selected_cells(self.selected_cells.copy() | {cell}, removed_cells=[])
+
+    def set_cell_as_current_selection(self, cell: Cell):
+        self.update_selected_cells([cell], self.selected_cells.copy())
 
     def update_selected_cells(self, added_cells, removed_cells):
         for cell in removed_cells:
