@@ -18,7 +18,7 @@ class Cell(QLabel):
         self.setAlignment(Qt.AlignCenter)
         self.setStyleSheet(self.defaultStyle)
 
-    def set_value(self, value):
+    def set_value(self, value: int):
         self.value = value
         self.setText(str(value))
 

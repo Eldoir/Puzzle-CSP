@@ -1,3 +1,4 @@
+from typing import List
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QPushButton, QMessageBox
 from Cell import Cell
 
@@ -7,8 +8,8 @@ class SudokuGrid(QWidget):
         
         self.selected_cells: set[Cell] = set()
         self.is_ctrl_pressed = False
+        self.cells: List[List[Cell]] = []
         
-        self.cells = []
         self.initUI()
     
     def initUI(self):
