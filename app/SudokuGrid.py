@@ -1,6 +1,6 @@
 from typing import List
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QPushButton, QMessageBox
-from PyQt5.QtGui import QKeyEvent
+from PyQt5.QtGui import QKeyEvent, QMouseEvent
 from Cell import Cell
 from collections.abc import Iterable
 
@@ -36,7 +36,7 @@ class SudokuGrid(QWidget):
         
         self.setLayout(layout)
     
-    def cell_clicked(self, event, row: int, col: int):
+    def cell_clicked(self, event: QMouseEvent, row: int, col: int):
         cell = self.cells[row][col]
         if self.is_ctrl_pressed: # add cell to current selection
             self.add_to_selected_cells(cell)
