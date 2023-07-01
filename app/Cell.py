@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 class Cell(QWidget):
     font: QFont = None
     defaultStyle: str = "background-color: white; border: 1px solid black;"
-    selectedStyle: str = "background-color: blue; border: 1px solid black;"
+    selectedStyle: str = "background-color: #9cdcfe; border: 1px solid black;"
     value: int = 0
 
     def __init__(self):
