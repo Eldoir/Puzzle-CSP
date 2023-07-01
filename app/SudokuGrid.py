@@ -42,10 +42,17 @@ class SudokuGrid(QWidget):
     
     def cell_clicked(self, event: QMouseEvent, cell: Cell):
         if event.button() == Qt.LeftButton:
-            if self.is_ctrl_pressed: # add cell to current selection
-                self.add_to_selected_cells(cell)
-            else: # set cell as current selection
-                self.set_cell_as_current_selection(cell)
+            if self.is_ctrl_pressed:
+                if cell.is_selected:
+                    self.remove_from_selected_cells(cell)
+                else:
+                    self.add_to_selected_cells(cell)
+            else:
+                if self.selected_cells == {cell}:
+                    self.remove_from_selected_cells(cell)
+                else:
+                    self.set_cell_as_current_selection(cell)
+            
             self.is_left_mouse_pressed = True
 
     def mouseMoveEvent(self, event: QMouseEvent):
@@ -92,6 +99,9 @@ class SudokuGrid(QWidget):
 
     def add_to_selected_cells(self, cell: Cell):
         self.update_selected_cells(self.selected_cells.copy() | {cell}, removed_cells=[])
+
+    def remove_from_selected_cells(self, cell: Cell):
+        self.update_selected_cells(added_cells=[], removed_cells=[cell])
 
     def set_cell_as_current_selection(self, cell: Cell):
         self.update_selected_cells([cell], self.selected_cells.copy())
