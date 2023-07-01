@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QPushButton, QMes
 from PyQt5.QtGui import QKeyEvent, QMouseEvent
 from Cell import Cell
 from collections.abc import Iterable
+from Keyboard import Key
 
 class SudokuGrid(QWidget):
     def __init__(self):
@@ -47,17 +48,17 @@ class SudokuGrid(QWidget):
         if event.isAutoRepeat():
             return
         key = event.key()
-        if key >= 49 and key <= 57: #numpad 1-9
-            self.set_selected_cells_value(key - 48)
-        elif key == 16777219 or key == 16777223: # backspace or delete
+        if key >= Key.NUMPAD_1 and key <= Key.NUMPAD_9:
+            self.set_selected_cells_value(key - Key.NUMPAD_0)
+        elif key == Key.BACKSPACE or key == Key.DELETE:
             self.delete_selected_cells_value()
-        elif key == 16777249: # ctrl (left/right)
+        elif key == Key.CTRL_LEFT_RIGHT:
             self.is_ctrl_pressed = True
         print(f"Key pressed: {key}")
 
     def keyReleaseEvent(self, event: QKeyEvent):
         key = event.key()
-        if key == 16777249: # ctrl (left/right)
+        if key == Key.CTRL_LEFT_RIGHT:
             self.is_ctrl_pressed = False
 
     def set_selected_cells_value(self, value: int):
