@@ -6,6 +6,7 @@ from Cell import Cell
 from collections.abc import Iterable
 from Keyboard import Key
 from typing import Tuple
+from solve_sudoku import solve
 
 class SudokuGrid(QWidget):
     def __init__(self):
@@ -162,6 +163,18 @@ class SudokuGrid(QWidget):
                 if self.get_cell(row, col) == cell:
                     self.last_selected_cell_pos = (row, col)
 
+    def get_grid_values(self) -> List[List[int]]:
+        return [[cell.value for cell in row] for row in self.cells]
+    
+    def apply_values(self, grid: List[List[int]]):
+        for row in range(len(grid)):
+            for col in range(len(grid[row])):
+                self.cells[row][col].set_value(grid[row][col])
+
     def solve_button_clicked(self):
-        popup = QMessageBox(QMessageBox.Information, 'Popup', 'Solving...', QMessageBox.Ok)
-        popup.exec_()
+        new_grid = solve(self.get_grid_values())
+        if new_grid is None:
+            popup = QMessageBox(QMessageBox.Warning, 'No solution', 'No solution!', QMessageBox.Ok)
+            popup.exec_()
+        else:
+            self.apply_values(new_grid)
