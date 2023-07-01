@@ -85,23 +85,23 @@ class SudokuGrid(QWidget):
             self.delete_selected_cells_value()
         elif key == Key.CTRL_LEFT_RIGHT:
             self.is_ctrl_pressed = True
-        elif key == Key.Z:
+        elif key == Key.Z or key == Key.ARROW_UP:
             if self.last_selected_cell_pos is not None:
                 next_cell = self.get_cell_with_dir(self.last_selected_cell_pos, (-1, 0))
                 self.set_cell_as_current_selection(next_cell)
-        elif key == Key.Q:
+        elif key == Key.Q or key == Key.ARROW_LEFT:
             if self.last_selected_cell_pos is not None:
                 next_cell = self.get_cell_with_dir(self.last_selected_cell_pos, (0, -1))
                 self.set_cell_as_current_selection(next_cell)
-        elif key == Key.S:
+        elif key == Key.S or key == Key.ARROW_DOWN:
             if self.last_selected_cell_pos is not None:
                 next_cell = self.get_cell_with_dir(self.last_selected_cell_pos, (1, 0))
                 self.set_cell_as_current_selection(next_cell)
-        elif key == Key.D:
+        elif key == Key.D or key == Key.ARROW_RIGHT:
             if self.last_selected_cell_pos is not None:
                 next_cell = self.get_cell_with_dir(self.last_selected_cell_pos, (0, 1))
                 self.set_cell_as_current_selection(next_cell)
-        print(f"Key pressed: {key}")
+        #print(f"Key pressed: {key}")
 
     def keyReleaseEvent(self, event: QKeyEvent):
         key = event.key()
