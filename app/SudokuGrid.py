@@ -98,13 +98,13 @@ class SudokuGrid(QWidget):
             cell.delete_value()
 
     def add_to_selected_cells(self, cell: Cell):
-        self.update_selected_cells(self.selected_cells.copy() | {cell}, removed_cells=[])
+        self.update_selected_cells(added_cells=[cell], removed_cells=[])
 
     def remove_from_selected_cells(self, cell: Cell):
         self.update_selected_cells(added_cells=[], removed_cells=[cell])
 
     def set_cell_as_current_selection(self, cell: Cell):
-        self.update_selected_cells([cell], self.selected_cells.copy())
+        self.update_selected_cells(added_cells=[cell], removed_cells=self.selected_cells.copy())
 
     def update_selected_cells(self, added_cells: Iterable[Cell], removed_cells: Iterable[Cell]):
         for cell in removed_cells:
