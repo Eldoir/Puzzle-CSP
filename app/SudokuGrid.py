@@ -1,5 +1,6 @@
 from typing import List
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QPushButton, QMessageBox
+from PyQt5.QtGui import QKeyEvent
 from Cell import Cell
 from collections.abc import Iterable
 
@@ -42,7 +43,9 @@ class SudokuGrid(QWidget):
         else: # set cell as current selection
             self.set_cell_as_current_selection(cell)
     
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event: QKeyEvent):
+        if event.isAutoRepeat():
+            return
         key = event.key()
         if key >= 49 and key <= 57: #numpad 1-9
             self.set_selected_cells_value(key - 48)
@@ -52,7 +55,7 @@ class SudokuGrid(QWidget):
             self.is_ctrl_pressed = True
         print(f"Key pressed: {key}")
 
-    def keyReleaseEvent(self, event):
+    def keyReleaseEvent(self, event: QKeyEvent):
         key = event.key()
         if key == 16777249: # ctrl (left/right)
             self.is_ctrl_pressed = False
