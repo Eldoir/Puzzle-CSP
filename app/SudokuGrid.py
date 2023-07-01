@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt, QRect
 from Cell import Cell
 from collections.abc import Iterable
 from Keyboard import Key
+from typing import Tuple
 
 class SudokuGrid(QWidget):
     def __init__(self):
@@ -12,6 +13,7 @@ class SudokuGrid(QWidget):
         
         self.selected_cells: set[Cell] = set()
         self.cells: List[List[Cell]] = []
+        self.last_selected_cell_pos: Tuple[int, int] = None
 
         self.is_ctrl_pressed = False
         self.is_left_mouse_pressed = False
@@ -82,12 +84,44 @@ class SudokuGrid(QWidget):
             self.delete_selected_cells_value()
         elif key == Key.CTRL_LEFT_RIGHT:
             self.is_ctrl_pressed = True
+        elif key == Key.Z:
+            if self.last_selected_cell_pos is not None:
+                next_cell = self.get_cell_with_dir(self.last_selected_cell_pos, (-1, 0))
+                self.set_cell_as_current_selection(next_cell)
+        elif key == Key.Q:
+            if self.last_selected_cell_pos is not None:
+                next_cell = self.get_cell_with_dir(self.last_selected_cell_pos, (0, -1))
+                self.set_cell_as_current_selection(next_cell)
+        elif key == Key.S:
+            if self.last_selected_cell_pos is not None:
+                next_cell = self.get_cell_with_dir(self.last_selected_cell_pos, (1, 0))
+                self.set_cell_as_current_selection(next_cell)
+        elif key == Key.D:
+            if self.last_selected_cell_pos is not None:
+                next_cell = self.get_cell_with_dir(self.last_selected_cell_pos, (0, 1))
+                self.set_cell_as_current_selection(next_cell)
         print(f"Key pressed: {key}")
 
     def keyReleaseEvent(self, event: QKeyEvent):
         key = event.key()
         if key == Key.CTRL_LEFT_RIGHT:
             self.is_ctrl_pressed = False
+
+    def get_cell(self, row: int, col: int) -> Cell:
+        return self.cells[row][col]
+    
+    def get_cell_with_dir(self, cell_pos: Tuple[int, int], dir: Tuple[int, int]) -> Cell:
+        row = cell_pos[0] + dir[0]
+        if row == -1:
+            row = len(self.cells) - 1
+        elif row >= len(self.cells):
+            row = 0
+        col = cell_pos[1] + dir[1]
+        if col == -1:
+            col = len(self.cells[0]) - 1
+        elif col >= len(self.cells[0]):
+            col = 0
+        return self.get_cell(row, col)
 
     def set_selected_cells_value(self, value: int):
         for cell in self.selected_cells:
@@ -99,12 +133,14 @@ class SudokuGrid(QWidget):
 
     def add_to_selected_cells(self, cell: Cell):
         self.update_selected_cells(added_cells=[cell], removed_cells=[])
+        self.set_last_selected_cell(cell)
 
     def remove_from_selected_cells(self, cell: Cell):
         self.update_selected_cells(added_cells=[], removed_cells=[cell])
 
     def set_cell_as_current_selection(self, cell: Cell):
         self.update_selected_cells(added_cells=[cell], removed_cells=self.selected_cells.copy())
+        self.set_last_selected_cell(cell)
 
     def update_selected_cells(self, added_cells: Iterable[Cell], removed_cells: Iterable[Cell]):
         for cell in removed_cells:
@@ -113,6 +149,18 @@ class SudokuGrid(QWidget):
         for cell in added_cells:
             cell.set_selected(True)
             self.selected_cells.add(cell)
+        
+        if len(self.selected_cells) == 0:
+            self.set_last_selected_cell(None)
+        
+    def set_last_selected_cell(self, cell: Cell):
+        if cell is None:
+            self.last_selected_cell_pos = None
+
+        for row in range(len(self.cells)):
+            for col in range(len(self.cells[row])):
+                if self.get_cell(row, col) == cell:
+                    self.last_selected_cell_pos = (row, col)
 
     def solve_button_clicked(self):
         popup = QMessageBox(QMessageBox.Information, 'Popup', 'Solving...', QMessageBox.Ok)
