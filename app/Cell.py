@@ -13,6 +13,8 @@ class Cell(QWidget):
         if self.font is None:
             self.font = QFont()
             self.font.setPointSize(20)
+
+        self.is_selected = False
         
         self.label = QLabel()
         self.label.setFont(self.font)
@@ -35,4 +37,5 @@ class Cell(QWidget):
         self.label.setText("")
 
     def set_selected(self, selected: bool):
+        self.is_selected = selected
         self.setStyleSheet(self.selectedStyle if selected else self.defaultStyle)

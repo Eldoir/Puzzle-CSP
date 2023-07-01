@@ -1,6 +1,7 @@
 from typing import List
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QPushButton, QMessageBox
 from PyQt5.QtGui import QKeyEvent, QMouseEvent
+from PyQt5.QtCore import Qt, QRect
 from Cell import Cell
 from collections.abc import Iterable
 from Keyboard import Key
@@ -10,8 +11,10 @@ class SudokuGrid(QWidget):
         super().__init__()
         
         self.selected_cells: set[Cell] = set()
-        self.is_ctrl_pressed = False
         self.cells: List[List[Cell]] = []
+
+        self.is_ctrl_pressed = False
+        self.is_left_mouse_pressed = False
 
         self.initUI()
     
@@ -24,7 +27,7 @@ class SudokuGrid(QWidget):
             row_cells = []
             for col in range(9):
                 cell = Cell()
-                cell.mousePressEvent = lambda event, row=row, col=col: self.cell_clicked(event, row, col)
+                cell.mousePressEvent = lambda event, cell=cell: self.cell_clicked(event, cell)
                 row_cells.append(cell)
                 grid_layout.addWidget(cell, row, col)
             self.cells.append(row_cells)
@@ -37,12 +40,30 @@ class SudokuGrid(QWidget):
         
         self.setLayout(layout)
     
-    def cell_clicked(self, event: QMouseEvent, row: int, col: int):
-        cell = self.cells[row][col]
-        if self.is_ctrl_pressed: # add cell to current selection
-            self.add_to_selected_cells(cell)
-        else: # set cell as current selection
-            self.set_cell_as_current_selection(cell)
+    def cell_clicked(self, event: QMouseEvent, cell: Cell):
+        if event.button() == Qt.LeftButton:
+            if self.is_ctrl_pressed: # add cell to current selection
+                self.add_to_selected_cells(cell)
+            else: # set cell as current selection
+                self.set_cell_as_current_selection(cell)
+            self.is_left_mouse_pressed = True
+
+    def mouseMoveEvent(self, event: QMouseEvent):
+        if self.is_left_mouse_pressed:
+            pos = event.pos()
+            for row in self.cells:
+                for cell in row:
+                    if not cell.is_selected:
+                        if QRect(cell.pos().x(), cell.pos().y(), cell.rect().width(), cell.rect().height()).contains(pos):
+                            self.add_to_selected_cells(cell)
+
+    def mousePressEvent(self, event: QMouseEvent):
+        if event.button() == Qt.LeftButton:
+            self.is_left_mouse_pressed = True
+
+    def mouseReleaseEvent(self, event: QMouseEvent):
+        if event.button() == Qt.LeftButton:
+            self.is_left_mouse_pressed = False
     
     def keyPressEvent(self, event: QKeyEvent):
         if event.isAutoRepeat():
