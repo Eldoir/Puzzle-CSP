@@ -1,5 +1,5 @@
 from typing import List
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QWidget, QGridLayout, QMessageBox
 from PyQt5.QtGui import QKeyEvent, QMouseEvent
 from PyQt5.QtCore import Qt, QRect
 from Cell import Cell
@@ -7,6 +7,7 @@ from collections.abc import Iterable
 from Keyboard import Key
 from typing import Tuple
 from solve_sudoku import solve
+from Command import Command, CommandWithResult
 
 class SudokuGrid(QWidget):
     def __init__(self):
@@ -19,13 +20,13 @@ class SudokuGrid(QWidget):
         self.is_ctrl_pressed = False
         self.is_left_mouse_pressed = False
 
-        self.initUI()
+        # COMMANDS
+        self.set_cell_value_command = Command(self.set_selected_cells_value)
+        self.solve_command = CommandWithResult[bool](self.solve)
     
-    def initUI(self):
-        layout = QVBoxLayout()
-        grid_layout = QGridLayout()
+    def setupUi(self, grid_layout: QGridLayout):
         grid_layout.setSpacing(0)
-        
+
         for row in range(9):
             row_cells = []
             for col in range(9):
@@ -34,14 +35,6 @@ class SudokuGrid(QWidget):
                 row_cells.append(cell)
                 grid_layout.addWidget(cell, row, col)
             self.cells.append(row_cells)
-        
-        layout.addLayout(grid_layout)
-        
-        solve_button = QPushButton("Solve")
-        solve_button.clicked.connect(self.solve_button_clicked)
-        layout.addWidget(solve_button)
-        
-        self.setLayout(layout)
     
     def cell_clicked(self, event: QMouseEvent, cell: Cell):
         if event.button() == Qt.LeftButton:
@@ -101,7 +94,6 @@ class SudokuGrid(QWidget):
             if self.last_selected_cell_pos is not None:
                 next_cell = self.get_cell_with_dir(self.last_selected_cell_pos, (0, 1))
                 self.set_cell_as_current_selection(next_cell)
-        #print(f"Key pressed: {key}")
 
     def keyReleaseEvent(self, event: QKeyEvent):
         key = event.key()
@@ -171,10 +163,12 @@ class SudokuGrid(QWidget):
             for col in range(len(grid[row])):
                 self.cells[row][col].set_value(grid[row][col])
 
-    def solve_button_clicked(self):
+    """
+    Returns whether a solution was found.
+    """
+    def solve(self) -> bool:
         new_grid = solve(self.get_grid_values())
-        if new_grid is None:
-            popup = QMessageBox(QMessageBox.Warning, 'No solution', 'No solution!', QMessageBox.Ok)
-            popup.exec_()
-        else:
+        has_solution = new_grid is not None
+        if has_solution:
             self.apply_values(new_grid)
+        return has_solution
