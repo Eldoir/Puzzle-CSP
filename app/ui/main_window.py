@@ -355,7 +355,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Puzzle-CSP"))
         self.description.setPlaceholderText(_translate("MainWindow", "Enter description..."))
         self.button_1.setText(_translate("MainWindow", "1"))
         self.button_1.setShortcut(_translate("MainWindow", "1"))
