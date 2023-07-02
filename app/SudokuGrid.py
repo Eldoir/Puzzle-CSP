@@ -1,5 +1,5 @@
 from typing import List
-from PyQt5.QtWidgets import QWidget, QGridLayout, QMessageBox
+from PyQt5.QtWidgets import QWidget, QGridLayout
 from PyQt5.QtGui import QKeyEvent, QMouseEvent
 from PyQt5.QtCore import Qt, QRect
 from Cell import Cell
