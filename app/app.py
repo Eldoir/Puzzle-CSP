@@ -25,6 +25,8 @@ def main():
     # RELAY WINDOW <> GRID
     window.keyPressed.connect(grid.handleKeyPress)
     window.keyReleased.connect(grid.handleKeyRelease)
+    window.mousePressed.connect(grid.handleMousePress)
+    window.mouseReleased.connect(grid.handleMouseRelease)
 
     # CONNECT BUTTONS
     ui_window.button_0.pressed.connect(lambda: grid.set_cell_value_command.execute(0))

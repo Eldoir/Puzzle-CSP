@@ -61,11 +61,11 @@ class SudokuGrid(QWidget):
                         if QRect(cell.pos().x(), cell.pos().y(), cell.rect().width(), cell.rect().height()).contains(pos):
                             self.add_to_selected_cells(cell)
 
-    def mousePressEvent(self, event: QMouseEvent):
+    def handleMousePress(self, event: QMouseEvent):
         if event.button() == Qt.LeftButton:
             self.is_left_mouse_pressed = True
 
-    def mouseReleaseEvent(self, event: QMouseEvent):
+    def handleMouseRelease(self, event: QMouseEvent):
         if event.button() == Qt.LeftButton:
             self.is_left_mouse_pressed = False
     
