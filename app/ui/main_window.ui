@@ -713,7 +713,7 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="styleSheet">
-     <string notr="true">QMenu::item:selected
+     <string notr="true">QMenu::item:enabled:selected
 {
 	background-color: #90c8f6;
 	color: black;

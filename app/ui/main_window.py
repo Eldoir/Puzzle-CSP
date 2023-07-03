@@ -366,7 +366,7 @@ class Ui_MainWindow(object):
 "}")
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
-        self.menuFile.setStyleSheet("QMenu::item:selected\n"
+        self.menuFile.setStyleSheet("QMenu::item:enabled:selected\n"
 "{\n"
 "    background-color: #90c8f6;\n"
 "    color: black;\n"
