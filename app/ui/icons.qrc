@@ -1,8 +1,8 @@
 <RCC>
   <qresource>
-    <file>icons/delete.png</file>
-    <file>icons/validate.png</file>
-    <file>icons/redo.png</file>
-    <file>icons/undo.png</file>
+    <file>icons/delete.svg</file>
+    <file>icons/redo.svg</file>
+    <file>icons/undo.svg</file>
+    <file>icons/validate.svg</file>
   </qresource>
 </RCC>
