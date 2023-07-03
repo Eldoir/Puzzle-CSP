@@ -1,7 +1,7 @@
 from typing import List
 from PyQt5.QtWidgets import QWidget, QGridLayout
 from PyQt5.QtGui import QKeyEvent, QMouseEvent
-from PyQt5.QtCore import Qt, QRect
+from PyQt5.QtCore import Qt, QRect, pyqtSlot
 from Cell import Cell
 from collections.abc import Iterable
 from Keyboard import Key
@@ -22,6 +22,7 @@ class SudokuGrid(QWidget):
 
         # COMMANDS
         self.set_cell_value_command = Command(self.set_selected_cells_value)
+        self.delete_selected_cells_value_command = Command(self.delete_selected_cells_value)
         self.solve_command = CommandWithResult[bool](self.solve)
     
     def setupUi(self, grid_layout: QGridLayout):
@@ -68,13 +69,12 @@ class SudokuGrid(QWidget):
         if event.button() == Qt.LeftButton:
             self.is_left_mouse_pressed = False
     
-    def keyPressEvent(self, event: QKeyEvent):
+    @pyqtSlot(QKeyEvent)
+    def handleKeyPress(self, event: QKeyEvent):
         if event.isAutoRepeat():
             return
         key = event.key()
-        if key >= Key.NUMPAD_1 and key <= Key.NUMPAD_9:
-            self.set_selected_cells_value(key - Key.NUMPAD_0)
-        elif key == Key.BACKSPACE or key == Key.DELETE:
+        if key == Key.BACKSPACE or key == Key.DELETE:
             self.delete_selected_cells_value()
         elif key == Key.CTRL_LEFT_RIGHT:
             self.is_ctrl_pressed = True
@@ -95,7 +95,8 @@ class SudokuGrid(QWidget):
                 next_cell = self.get_cell_with_dir(self.last_selected_cell_pos, (0, 1))
                 self.set_cell_as_current_selection(next_cell)
 
-    def keyReleaseEvent(self, event: QKeyEvent):
+    @pyqtSlot(QKeyEvent)
+    def handleKeyRelease(self, event: QKeyEvent):
         key = event.key()
         if key == Key.CTRL_LEFT_RIGHT:
             self.is_ctrl_pressed = False

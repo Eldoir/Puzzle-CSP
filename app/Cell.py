@@ -30,13 +30,13 @@ class Cell(QWidget):
 
     def set_value(self, value: int):
         self.value = value
-        if value >= 1 and value <= 9:
+        if value >= 0 and value <= 9:
             self.label.setText(str(value))
         else:
             self.label.setText("")
 
     def delete_value(self):
-        self.set_value(0)
+        self.set_value(-1)
 
     def set_selected(self, selected: bool):
         self.is_selected = selected
