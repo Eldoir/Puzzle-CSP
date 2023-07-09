@@ -8,7 +8,7 @@ def run_tests():
     print(f'{len(files)} file(s) found')
 
     for file in files:
-        print(f'--- Running tests for file: {file} ---')
+        print(f'--- {file} ---')
         module_name = os.path.splitext(file)[0]
         module = importlib.import_module(module_name)
         importlib.reload(module)
@@ -17,9 +17,9 @@ def run_tests():
             if name.startswith("test_") and inspect.isfunction(obj):
                 try:
                     obj()
-                    print(f"Test {name}: OK")
+                    print(f"[OK] {name}")
                 except Exception as e:
-                    print(f"Test {name}: FAIL: {e}")
+                    print(f"[FAIL] {name}: {e}")
 
 if __name__ == "__main__":
     run_tests()

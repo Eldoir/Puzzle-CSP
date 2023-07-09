@@ -9,9 +9,11 @@ def test_ArrowRules():
     problem = Problem()
     for row in variables:
         for variable in row:
-            problem.addVariable(variable, range(0, 2)) # possible values: 0 and 1
+            problem.addVariable(variable, range(0, 2))
     rules.add_constraints(problem, len(variables), len(variables[0]), variables)
-    solutions = problem.getSolutions() # expected solutions : 0 = 0 + 0, 1 = 0 + 1, 1 = 1 + 0
-    assert len(solutions) == 3
-
-test_ArrowRules()
+    solutions = problem.getSolutions()
+    assert solutions == [
+        {'A': 1, 'B': 1, 'C': 0},
+        {'A': 1, 'B': 0, 'C': 1},
+        {'A': 0, 'B': 0, 'C': 0}
+    ]
