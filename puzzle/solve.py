@@ -25,6 +25,10 @@ def solve_puzzle(puzzle: Puzzle):
 
 def print_sudoku(solution, h, w):
     for i in range(h):
+        if i % 3 == 0 and i != 0:
+            print("- - - - - - - - - - -")
         for j in range(w):
+            if j % 3 == 0 and j != 0:
+                print("|", end=" ")
             print(solution[i * h + j], end=' ')
-        print("")
+        print()
